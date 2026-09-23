@@ -1,0 +1,29 @@
+// Semantic tokens: named by purpose, mirroring the Figma color variables.
+// Components use these; each one points to a primitive.
+:root {
+  // Inverse: high-emphasis dark color (selected Pill, selected Underline bar).
+  --color-inverse: var(--color-neutral-900);
+  --color-inverse-hover: var(--color-neutral-800);
+  --color-inverse-active: var(--color-neutral-600);
+
+  // Content colors: text on inverse and on neutral surfaces.
+  --color-on-inverse: var(--color-neutral-0);
+  --color-on-neutral: var(--color-neutral-900);
+
+  // Surfaces: default background and interaction states of unselected tabs.
+  --color-surface: var(--color-neutral-0);
+  --color-surface-hover: var(--color-neutral-50);
+  --color-surface-active: var(--color-neutral-100);
+
+  // Badge backgrounds: neutral, positive and negative variants.
+  --color-surface-high: var(--color-neutral-100);
+  --color-surface-positive: var(--color-green-100);
+  --color-surface-negative: var(--color-red-100);
+
+  // Outlines: Pill borders and the unselected Underline bar.
+  --color-outline: var(--color-neutral-200);
+  --color-outline-hover: var(--color-neutral-300);
+
+  // Focus ring. Not in Figma: unifies its inconsistent focus colors.
+  --color-focus: var(--color-neutral-900);
+}

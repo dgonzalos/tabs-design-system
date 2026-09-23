@@ -1,0 +1,12 @@
+// Breakpoints: Sass-only (no CSS output), safe to @use from any component.
+// Sass variables because var() cannot be used inside @media.
+
+// Figma "Mobile: True" = viewport 768px or narrower.
+$breakpoint-mobile: 768px;
+
+// Wraps the given styles in the mobile media query.
+@mixin mobile {
+  @media (width <= $breakpoint-mobile) {
+    @content;
+  }
+}

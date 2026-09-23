@@ -1,0 +1,15 @@
+@use "./tokens/primitives";
+@use "./tokens/semantic";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  color: var(--color-on-neutral);
+  background-color: var(--color-surface);
+}
