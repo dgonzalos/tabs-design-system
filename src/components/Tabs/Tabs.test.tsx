@@ -3,7 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Tabs, type TabsProps } from "./Tabs";
+import { type TabItem, Tabs, type TabsProps } from "./Tabs";
 
 describe("Tabs", () => {
   beforeEach(() => {
@@ -233,5 +233,23 @@ describe("Tabs", () => {
     tabs.forEach((tab) => {
       expect(tab).toHaveAttribute("data-variant", "underline");
     });
+  });
+
+  it("renders tabs with badges correctly", () => {
+    const tabListWithBadges: TabItem[] = [
+      {
+        value: "Emails",
+        content: <p>Content 1</p>,
+        label: "Emails",
+        badge: { label: "New", variant: "positive" },
+      },
+    ];
+    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabListWithBadges });
+    expect(screen.getByRole("tab", { name: "Emails New" })).toBeInTheDocument();
+  });
+
+  it("renders only the label when the tab has no badge", () => {
+    renderTabs();
+    expect(screen.getByRole("tab", { name: "Tab 1" })).toBeInTheDocument();
   });
 });

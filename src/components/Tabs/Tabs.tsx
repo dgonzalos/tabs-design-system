@@ -1,5 +1,6 @@
 import type React from "react";
 import { useId, useState } from "react";
+import type { BadgeVariant } from "../Badge";
 import { Tab } from "./Tab/Tab";
 import styles from "./Tabs.module.scss";
 
@@ -9,6 +10,7 @@ export type TabItem = {
   value: string;
   content: React.ReactNode;
   label: string;
+  badge?: { label: string; variant?: BadgeVariant };
 };
 
 export interface TabsProps extends React.ComponentPropsWithRef<"div"> {
@@ -51,6 +53,7 @@ export function Tabs({
             label={item.label}
             onClick={() => onTabClick(item.value)}
             variant={variant}
+            badge={item.badge}
           />
         ))}
       </div>

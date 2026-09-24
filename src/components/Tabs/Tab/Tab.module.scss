@@ -9,6 +9,9 @@
   font-weight: var(--font-weight-bold);
   line-height: var(--font-line-height-body);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2xs);
 
   &:focus-visible {
     outline: 2px solid var(--color-focus);

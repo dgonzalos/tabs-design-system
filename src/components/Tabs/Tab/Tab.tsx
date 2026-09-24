@@ -1,14 +1,16 @@
 import type React from "react";
-import type { TabsVariant } from "../Tabs";
+import { Badge } from "../../Badge";
+import type { TabItem, TabsVariant } from "../Tabs";
 import styles from "./Tab.module.scss";
 
 export interface TabProps extends React.ComponentPropsWithRef<"button"> {
   selected: boolean;
   label: string;
   variant: TabsVariant;
+  badge?: TabItem["badge"];
 }
 
-export function Tab({ selected, label, className, variant, ...rest }: TabProps) {
+export function Tab({ selected, label, className, variant, badge, ...rest }: TabProps) {
   const classes = [styles.tab, className].filter(Boolean).join(" ");
 
   return (
@@ -20,7 +22,7 @@ export function Tab({ selected, label, className, variant, ...rest }: TabProps) 
       role="tab"
       aria-selected={selected}
     >
-      {label}
+      {label} {badge && <Badge variant={badge.variant}>{badge.label}</Badge>}
     </button>
   );
 }
