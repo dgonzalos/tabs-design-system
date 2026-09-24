@@ -1,0 +1,35 @@
+@use "../../styles/tokens/breakpoints" as *;
+
+.badge {
+  --badge-padding-block: var(--spacing-3xs);
+  --badge-padding-inline: var(--spacing-2xs);
+  --badge-radius: 12px;
+
+  display: inline-block;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body-s);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--font-line-height-body);
+  color: var(--color-on-neutral);
+  white-space: nowrap;
+
+  &[data-variant="neutral"] {
+    background-color: var(--color-surface-high);
+  }
+
+  &[data-variant="positive"] {
+    background-color: var(--color-surface-positive);
+  }
+
+  &[data-variant="negative"] {
+    background-color: var(--color-surface-negative);
+  }
+
+  @include mobile {
+    --badge-padding-block: var(--spacing-4xs);
+    --badge-padding-inline: var(--spacing-3xs);
+    --badge-radius: 8px;
+  }
+}
