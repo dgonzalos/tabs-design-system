@@ -1,6 +1,9 @@
 import type React from "react";
 import { useId, useState } from "react";
 import { Tab } from "./Tab/Tab";
+import styles from "./Tabs.module.scss";
+
+export type TabsVariant = "pill";
 
 export type TabItem = {
   value: string;
@@ -12,6 +15,7 @@ export interface TabsProps extends React.ComponentPropsWithRef<"div"> {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   items: TabItem[];
+  variant?: TabsVariant;
 }
 
 const getTabId = (baseId: string, value: string) => `${baseId}-tab-${value}`;
@@ -21,12 +25,12 @@ export function Tabs({
   defaultValue,
   onValueChange,
   items,
+  variant = "pill",
   "aria-label": ariaLabel,
   ...rest
 }: TabsProps) {
   const baseId = useId();
   const [selectedValue, setSelectedValue] = useState<string>(defaultValue ?? items[0].value);
-
   const onTabClick = (value: string) => {
     if (value === selectedValue) {
       return;
@@ -37,7 +41,7 @@ export function Tabs({
 
   return (
     <div {...rest}>
-      <div role="tablist" aria-label={ariaLabel}>
+      <div className={styles.tabList} data-variant={variant} role="tablist" aria-label={ariaLabel}>
         {items.map((item) => (
           <Tab
             selected={item.value === selectedValue}
@@ -46,6 +50,7 @@ export function Tabs({
             key={item.value}
             label={item.label}
             onClick={() => onTabClick(item.value)}
+            variant={variant}
           />
         ))}
       </div>

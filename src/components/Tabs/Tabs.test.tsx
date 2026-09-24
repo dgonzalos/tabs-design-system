@@ -216,4 +216,13 @@ describe("Tabs", () => {
     const results = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
     expect(results.violations).toEqual([]);
   });
+
+  it("uses the pill variant by default", () => {
+    renderTabs();
+    expect(screen.getByRole("tablist")).toHaveAttribute("data-variant", "pill");
+    const tabs = screen.getAllByRole("tab");
+    tabs.forEach((tab) => {
+      expect(tab).toHaveAttribute("data-variant", "pill");
+    });
+  });
 });

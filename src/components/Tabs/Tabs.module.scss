@@ -1,0 +1,7 @@
+.tabList {
+  display: flex;
+
+  &[data-variant="pill"] {
+    gap: var(--spacing-xs);
+  }
+}
