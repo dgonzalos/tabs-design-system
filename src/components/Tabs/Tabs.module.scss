@@ -4,4 +4,8 @@
   &[data-variant="pill"] {
     gap: var(--spacing-xs);
   }
+
+  &[data-variant="underline"] {
+    gap: var(--spacing-xl);
+  }
 }

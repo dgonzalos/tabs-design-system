@@ -225,4 +225,13 @@ describe("Tabs", () => {
       expect(tab).toHaveAttribute("data-variant", "pill");
     });
   });
+
+  it("uses the underline variant when specified", () => {
+    renderTabs({ variant: "underline" });
+    expect(screen.getByRole("tablist")).toHaveAttribute("data-variant", "underline");
+    const tabs = screen.getAllByRole("tab");
+    tabs.forEach((tab) => {
+      expect(tab).toHaveAttribute("data-variant", "underline");
+    });
+  });
 });

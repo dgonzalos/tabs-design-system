@@ -44,4 +44,20 @@
       }
     }
   }
+
+  &[data-variant="underline"] {
+    padding: 0;
+    border: none;
+    border-bottom: 3px solid transparent;
+
+    &:hover,
+    &:active,
+    &:focus-visible {
+      border-bottom-color: var(--color-outline-hover);
+    }
+
+    &[aria-selected="true"] {
+      border-bottom-color: var(--color-inverse);
+    }
+  }
 }

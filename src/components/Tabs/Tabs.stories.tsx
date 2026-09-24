@@ -28,3 +28,7 @@ export const Default: Story = {};
 export const WithDefaultValue: Story = {
   args: { defaultValue: "Files" },
 };
+
+export const UnderlineVariant: Story = {
+  args: { variant: "underline" },
+};
