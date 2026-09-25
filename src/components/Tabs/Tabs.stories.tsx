@@ -35,6 +35,10 @@ export const UnderlineVariant: Story = {
   args: { variant: "underline" },
 };
 
+export const Mobile: Story = {
+  globals: { viewport: { value: "mobile1", isRotated: false } },
+};
+
 export const WithBadge: Story = {
   args: {
     items: [

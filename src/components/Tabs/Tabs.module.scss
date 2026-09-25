@@ -1,11 +1,21 @@
+@use "../../styles/tokens/breakpoints" as *;
+
 .tabList {
   display: flex;
+  padding: var(--spacing-3xs);
+  overflow-x: auto;
 
   &[data-variant="pill"] {
     gap: var(--spacing-xs);
+    @include mobile {
+      gap: var(--spacing-2xs);
+    }
   }
 
   &[data-variant="underline"] {
     gap: var(--spacing-xl);
+    @include mobile {
+      gap: var(--spacing-l);
+    }
   }
 }
