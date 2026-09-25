@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+     
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          cache: 'pnpm'
+          node-version: '24'
+      - name: Install and build
+        run: |
+          pnpm install
+          pnpm check
+          pnpm tsc
+          pnpm test
+          pnpm build-storybook
+    
