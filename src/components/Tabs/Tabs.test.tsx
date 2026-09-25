@@ -252,4 +252,35 @@ describe("Tabs", () => {
     renderTabs();
     expect(screen.getByRole("tab", { name: "Tab 1" })).toBeInTheDocument();
   });
+
+  it("renders the correct tab as selected by default", () => {
+    renderTabs({ defaultValue: "tab2" });
+    const firstTab = screen.getByRole("tab", { name: "Tab 1" });
+    const secondTab = screen.getByRole("tab", { name: "Tab 2" });
+    expect(firstTab).toHaveAttribute("tabindex", "-1");
+    expect(secondTab).toHaveAttribute("tabindex", "0");
+  });
+
+  it("changes the selected tab when pressing arrow keys", async () => {
+    renderTabs({ defaultValue: "tab1" });
+    const firstTab = screen.getByRole("tab", { name: "Tab 1" });
+    const secondTab = screen.getByRole("tab", { name: "Tab 2" });
+
+    firstTab.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(firstTab).toHaveAttribute("tabindex", "-1");
+    expect(secondTab).toHaveAttribute("tabindex", "0");
+
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(firstTab).toHaveAttribute("tabindex", "0");
+    expect(secondTab).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("renders one tab with tab index 0 and the rest with -1", () => {
+    renderTabs({ defaultValue: "tab1" });
+    const firstTab = screen.getByRole("tab", { name: "Tab 1" });
+    const secondTab = screen.getByRole("tab", { name: "Tab 2" });
+    expect(firstTab).toHaveAttribute("tabindex", "0");
+    expect(secondTab).toHaveAttribute("tabindex", "-1");
+  });
 });

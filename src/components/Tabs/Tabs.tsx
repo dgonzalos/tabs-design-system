@@ -1,5 +1,5 @@
 import type React from "react";
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import type { BadgeVariant } from "../Badge";
 import { Tab } from "./Tab/Tab";
 import styles from "./Tabs.module.scss";
@@ -41,6 +41,27 @@ export function Tabs({
     onValueChange?.(value);
   };
 
+  // Handle keyboard navigation between tabs
+  const onTabKeyDown = (value: string) => (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+      return;
+    }
+    let currentIndex = items.findIndex((item) => item.value === value);
+    if (event.key === "ArrowRight") {
+      currentIndex = (currentIndex + 1) % items.length;
+      tabRefs.current[items[currentIndex].value]?.focus();
+      onTabClick(items[currentIndex].value);
+      // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
+      event.preventDefault();
+    } else if (event.key === "ArrowLeft") {
+      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      tabRefs.current[items[currentIndex].value]?.focus();
+      onTabClick(items[currentIndex].value);
+      // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
+      event.preventDefault();
+    }
+  };
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   return (
     <div {...rest}>
       <div className={styles.tabList} data-variant={variant} role="tablist" aria-label={ariaLabel}>
@@ -52,8 +73,13 @@ export function Tabs({
             key={item.value}
             label={item.label}
             onClick={() => onTabClick(item.value)}
+            onKeyDown={onTabKeyDown(item.value)}
             variant={variant}
             badge={item.badge}
+            ref={(el) => {
+              tabRefs.current[item.value] = el;
+            }}
+            tabIndex={item.value === selectedValue ? 0 : -1}
           />
         ))}
       </div>
@@ -63,9 +89,9 @@ export function Tabs({
           role="tabpanel"
           id={getPanelId(baseId, item.value)}
           aria-labelledby={getTabId(baseId, item.value)}
+          hidden={item.value !== selectedValue}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: the ARIA tabs pattern puts the panel in the tab order
           tabIndex={0}
-          hidden={item.value !== selectedValue}
         >
           {item.content}
         </div>
