@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
@@ -222,7 +222,7 @@ describe("Tabs", () => {
     });
   });
 
-  it("renders tabs with badges correctly", () => {
+  it("renders each badge inside its tab with the chosen variant", () => {
     const tabListWithBadges: TabItem[] = [
       {
         value: "Emails",
@@ -230,9 +230,32 @@ describe("Tabs", () => {
         label: "Emails",
         badge: { label: "New", variant: "positive" },
       },
+      {
+        value: "Settings",
+        content: <p>Content 2</p>,
+        label: "Settings",
+        badge: { label: "Updated", variant: "neutral" },
+      },
+      {
+        value: "Profile",
+        content: <p>Content 3</p>,
+        label: "Profile",
+        badge: { label: "Failed", variant: "negative" },
+      },
     ];
     renderTabs({ defaultValue, items: tabListWithBadges });
-    expect(screen.getByRole("tab", { name: "Emails New" })).toBeInTheDocument();
+    const emailsTab = screen.getByRole("tab", { name: "Emails New" });
+    const settingsTab = screen.getByRole("tab", { name: "Settings Updated" });
+    const profileTab = screen.getByRole("tab", { name: "Profile Failed" });
+
+    expect(within(emailsTab).getByText("New")).toHaveAttribute("data-variant", "positive");
+    expect(within(settingsTab).getByText("Updated")).toHaveAttribute("data-variant", "neutral");
+    expect(within(profileTab).getByText("Failed")).toHaveAttribute("data-variant", "negative");
+  });
+
+  it("gives the tablist its accessible name from aria-label", () => {
+    renderTabs();
+    expect(screen.getByRole("tablist", { name: "Inbox" })).toBeInTheDocument();
   });
 
   it("renders only the label when the tab has no badge", () => {
