@@ -33,6 +33,8 @@ export function Tabs({
 }: TabsProps) {
   const baseId = useId();
   const [selectedValue, setSelectedValue] = useState<string>(defaultValue ?? items[0].value);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
   const onTabClick = (value: string) => {
     if (value === selectedValue) {
       return;
@@ -42,30 +44,27 @@ export function Tabs({
   };
 
   // Handle keyboard navigation between tabs
-  const onTabKeyDown = (value: string) => (event: React.KeyboardEvent<HTMLButtonElement>) => {
+  const onTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
       return;
     }
-    let currentIndex = items.findIndex((item) => item.value === value);
+
+    let nextIndex: number;
     if (event.key === "ArrowRight") {
-      currentIndex = (currentIndex + 1) % items.length;
-      tabRefs.current[items[currentIndex].value]?.focus();
-      onTabClick(items[currentIndex].value);
-      // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
-      event.preventDefault();
-    } else if (event.key === "ArrowLeft") {
-      currentIndex = (currentIndex - 1 + items.length) % items.length;
-      tabRefs.current[items[currentIndex].value]?.focus();
-      onTabClick(items[currentIndex].value);
-      // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
-      event.preventDefault();
+      nextIndex = (index + 1) % items.length;
+    } else {
+      nextIndex = (index - 1 + items.length) % items.length;
     }
+
+    tabRefs.current[nextIndex]?.focus();
+    onTabClick(items[nextIndex].value);
+    // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
+    event.preventDefault();
   };
-  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   return (
     <div {...rest}>
       <div className={styles.tabList} data-variant={variant} role="tablist" aria-label={ariaLabel}>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <Tab
             selected={item.value === selectedValue}
             id={getTabId(baseId, item.value)}
@@ -73,11 +72,11 @@ export function Tabs({
             key={item.value}
             label={item.label}
             onClick={() => onTabClick(item.value)}
-            onKeyDown={onTabKeyDown(item.value)}
+            onKeyDown={(event) => onTabKeyDown(event, index)}
             variant={variant}
             badge={item.badge}
             ref={(el) => {
-              tabRefs.current[item.value] = el;
+              tabRefs.current[index] = el;
             }}
             tabIndex={item.value === selectedValue ? 0 : -1}
           />
