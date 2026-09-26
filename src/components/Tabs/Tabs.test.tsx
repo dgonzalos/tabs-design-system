@@ -2,14 +2,10 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import userEvent from "@testing-library/user-event";
 import axe from "axe-core";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { type TabItem, Tabs, type TabsProps } from "./Tabs";
 
 describe("Tabs", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   const tabList = [
     { value: "tab1", content: "Content 1", label: "Tab 1" },
     { value: "tab2", content: "Content 2", label: "Tab 2" },
@@ -24,11 +20,10 @@ describe("Tabs", () => {
     return render(<Tabs aria-label="Inbox" items={tabList} {...props} />);
   }
 
-  const onValueChangeMock = vi.fn();
   const defaultValue = "tab2";
 
-  it("renders the Tabs component with default props", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+  it("renders a panel for each tab and shows only the selected one", () => {
+    renderTabs({ defaultValue });
     const tab1 = screen.getByRole("tab", { name: "Tab 1" });
     const tab2 = screen.getByRole("tab", { name: "Tab 2" });
     const tab3 = screen.getByRole("tab", { name: "Tab 3" });
@@ -50,23 +45,17 @@ describe("Tabs", () => {
     expect(panel3).not.toBeVisible();
   });
 
-  it("renders the Tabs with getByRole and finds it", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
-    const tablist = screen.getByRole("tablist");
-    expect(tablist).toBeInTheDocument();
+  it("renders the label of each tab", () => {
+    renderTabs({ defaultValue });
+    const tabs = screen.getAllByRole("tab");
+    expect(tabs).toHaveLength(3);
+    expect(tabs[0]).toHaveTextContent("Tab 1");
+    expect(tabs[1]).toHaveTextContent("Tab 2");
+    expect(tabs[2]).toHaveTextContent("Tab 3");
   });
 
-  it("renders the Tabs with their corresponding labels and finds them", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
-    const labels = screen.getAllByRole("tab");
-    expect(labels).toHaveLength(3);
-    expect(labels[0]).toHaveTextContent("Tab 1");
-    expect(labels[1]).toHaveTextContent("Tab 2");
-    expect(labels[2]).toHaveTextContent("Tab 3");
-  });
-
-  it("renders the Tabs with their corresponding panels and finds them", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+  it("renders the content of each panel", () => {
+    renderTabs({ defaultValue });
     const panels = screen.getAllByRole("tabpanel", { hidden: true });
     expect(panels).toHaveLength(3);
     expect(panels[0]).toHaveTextContent("Content 1");
@@ -75,14 +64,16 @@ describe("Tabs", () => {
   });
 
   it("doesn't call onValueChange when clicking on the selected tab", async () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+    const onValueChangeMock = vi.fn();
+    renderTabs({ defaultValue, onValueChange: onValueChangeMock });
     const selectedTab = screen.getByRole("tab", { name: "Tab 2" });
     await userEvent.click(selectedTab);
     expect(onValueChangeMock).not.toHaveBeenCalled();
   });
 
   it("calls onValueChange when clicking on a different tab", async () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+    const onValueChangeMock = vi.fn();
+    renderTabs({ defaultValue, onValueChange: onValueChangeMock });
     const unselectedTab = screen.getByRole("tab", { name: "Tab 1" });
     await userEvent.click(unselectedTab);
     expect(onValueChangeMock).toHaveBeenCalledWith("tab1");
@@ -92,7 +83,7 @@ describe("Tabs", () => {
     const onSubmitMock = vi.fn((e) => e.preventDefault());
     render(
       <form onSubmit={onSubmitMock}>
-        <Tabs defaultValue={defaultValue} onValueChange={onValueChangeMock} items={tabList} />
+        <Tabs defaultValue={defaultValue} items={tabList} />
         <button type="submit">Submit</button>
       </form>,
     );
@@ -101,8 +92,8 @@ describe("Tabs", () => {
     expect(onSubmitMock).not.toHaveBeenCalled();
   });
 
-  it("renders the Tabs without a defaultValue and selects the first tab has aria-selected true", () => {
-    renderTabs({ onValueChange: onValueChangeMock, items: tabList });
+  it("selects the first tab when there is no defaultValue", () => {
+    renderTabs();
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     const thirdTab = screen.getByRole("tab", { name: "Tab 3" });
@@ -119,8 +110,8 @@ describe("Tabs", () => {
     expect(panel3).not.toBeVisible();
   });
 
-  it("renders the Tabs with the selected tab as defaultValue and it is visible and has aria-selected true", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+  it("selects the tab given by defaultValue", () => {
+    renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     const thirdTab = screen.getByRole("tab", { name: "Tab 3" });
@@ -138,7 +129,7 @@ describe("Tabs", () => {
   });
 
   it("renders the tabs linked by aria-labelledby and aria-controls", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+    renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     const thirdTab = screen.getByRole("tab", { name: "Tab 3" });
@@ -152,7 +143,7 @@ describe("Tabs", () => {
   });
 
   it("renders the Tabs with each panel having a tabIndex of 0", () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+    renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     const thirdTab = screen.getByRole("tab", { name: "Tab 3" });
@@ -165,7 +156,7 @@ describe("Tabs", () => {
   });
 
   it("changes the tab selection when clicking on a different tab and updates the aria-selected attribute", async () => {
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabList });
+    renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     const thirdTab = screen.getByRole("tab", { name: "Tab 3" });
@@ -187,7 +178,7 @@ describe("Tabs", () => {
       { value: "tab2", content: <input type="text" defaultValue="Input 2" />, label: "Tab 2" },
       { value: "tab3", content: <input type="text" defaultValue="Input 3" />, label: "Tab 3" },
     ];
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabListWithInput });
+    renderTabs({ defaultValue, items: tabListWithInput });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
 
@@ -200,7 +191,7 @@ describe("Tabs", () => {
   });
 
   it("renders className and native props to the root element", () => {
-    const { container } = renderTabs({ className: "custom", title: "root" });
+    const { container } = renderTabs({ defaultValue, className: "custom", title: "root" });
 
     const root = container.firstElementChild;
     expect(root).toHaveClass("custom");
@@ -208,11 +199,7 @@ describe("Tabs", () => {
   });
 
   it("renders the Tabs with no axe accessibility violations", async () => {
-    const { container } = renderTabs({
-      onValueChange: onValueChangeMock,
-      defaultValue,
-      items: tabList,
-    });
+    const { container } = renderTabs({ defaultValue });
     const results = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
     expect(results.violations).toEqual([]);
   });
@@ -244,7 +231,7 @@ describe("Tabs", () => {
         badge: { label: "New", variant: "positive" },
       },
     ];
-    renderTabs({ onValueChange: onValueChangeMock, defaultValue, items: tabListWithBadges });
+    renderTabs({ defaultValue, items: tabListWithBadges });
     expect(screen.getByRole("tab", { name: "Emails New" })).toBeInTheDocument();
   });
 
@@ -253,7 +240,7 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Tab 1" })).toBeInTheDocument();
   });
 
-  it("renders the correct tab as selected by default", () => {
+  it("gives tabindex 0 only to the selected tab", () => {
     renderTabs({ defaultValue: "tab2" });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
     const secondTab = screen.getByRole("tab", { name: "Tab 2" });
@@ -272,14 +259,6 @@ describe("Tabs", () => {
     expect(secondTab).toHaveAttribute("tabindex", "0");
 
     await userEvent.keyboard("{ArrowLeft}");
-    expect(firstTab).toHaveAttribute("tabindex", "0");
-    expect(secondTab).toHaveAttribute("tabindex", "-1");
-  });
-
-  it("renders one tab with tab index 0 and the rest with -1", () => {
-    renderTabs({ defaultValue: "tab1" });
-    const firstTab = screen.getByRole("tab", { name: "Tab 1" });
-    const secondTab = screen.getByRole("tab", { name: "Tab 2" });
     expect(firstTab).toHaveAttribute("tabindex", "0");
     expect(secondTab).toHaveAttribute("tabindex", "-1");
   });
