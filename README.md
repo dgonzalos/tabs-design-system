@@ -54,7 +54,8 @@ import { Tabs } from "./components/Tabs";
 | `variant` | `"pill" \| "underline"` | `"pill"` | Visual variant from the design. |
 | `defaultValue` | `string` | first item | Value of the tab selected on first render. |
 | `onValueChange` | `(value: string) => void` | | Called when the selected tab changes. |
-| `aria-label` | `string` | | Accessible name of the tab list. Always pass one. |
+| `aria-label` | `string` | | Accessible name of the tab list. |
+| `aria-labelledby` | `string` | | Id of a visible element that names the tab list. Pass this or `aria-label`. |
 
 Any other `div` prop (`className`, `id`, `data-*`) goes to the root element.
 
