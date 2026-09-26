@@ -29,11 +29,16 @@ export function Tabs({
   items,
   variant = "pill",
   "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
   ...rest
 }: TabsProps) {
   const baseId = useId();
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue ?? items[0].value);
+  const [selectedValue, setSelectedValue] = useState<string>(defaultValue ?? items[0]?.value ?? "");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  if (items.length === 0) {
+    return null;
+  }
 
   const onTabClick = (value: string) => {
     if (value === selectedValue) {
@@ -63,7 +68,13 @@ export function Tabs({
   };
   return (
     <div {...rest}>
-      <div className={styles.tabList} data-variant={variant} role="tablist" aria-label={ariaLabel}>
+      <div
+        className={styles.tabList}
+        data-variant={variant}
+        role="tablist"
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledby}
+      >
         {items.map((item, index) => (
           <Tab
             selected={item.value === selectedValue}

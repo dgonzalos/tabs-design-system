@@ -69,3 +69,13 @@ export const WithBadge: Story = {
     ],
   },
 };
+
+export const LabelledByHeading: Story = {
+  args: { "aria-label": undefined, "aria-labelledby": "inbox-title" },
+  render: (args) => (
+    <>
+      <h2 id="inbox-title">Inbox</h2>
+      <Tabs {...args} />
+    </>
+  ),
+};

@@ -45,6 +45,11 @@ describe("Tabs", () => {
     expect(panel3).not.toBeVisible();
   });
 
+  it("renders nothing when there are no items", () => {
+    const { container } = renderTabs({ items: [] });
+    expect(container).toBeEmptyDOMElement();
+  });
+
   it("renders the label of each tab", () => {
     renderTabs({ defaultValue });
     const tabs = screen.getAllByRole("tab");
@@ -255,6 +260,16 @@ describe("Tabs", () => {
 
   it("gives the tablist its accessible name from aria-label", () => {
     renderTabs();
+    expect(screen.getByRole("tablist", { name: "Inbox" })).toBeInTheDocument();
+  });
+
+  it("gives the tablist its accessible name from aria-labelledby", () => {
+    render(
+      <>
+        <h2 id="inbox-title">Inbox</h2>
+        <Tabs items={tabList} aria-labelledby="inbox-title" />
+      </>,
+    );
     expect(screen.getByRole("tablist", { name: "Inbox" })).toBeInTheDocument();
   });
 
