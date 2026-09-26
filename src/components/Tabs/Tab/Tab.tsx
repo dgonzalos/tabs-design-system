@@ -10,12 +10,10 @@ export interface TabProps extends React.ComponentPropsWithRef<"button"> {
   badge?: TabItem["badge"];
 }
 
-export function Tab({ selected, label, className, variant, badge, ...rest }: TabProps) {
-  const classes = [styles.tab, className].filter(Boolean).join(" ");
-
+export function Tab({ selected, label, variant, badge, ...rest }: TabProps) {
   return (
     <button
-      className={classes}
+      className={styles.tab}
       {...rest}
       data-variant={variant}
       type="button"

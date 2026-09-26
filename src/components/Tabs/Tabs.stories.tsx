@@ -23,13 +23,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
-
-export const WithDefaultValue: Story = {
-  args: {
-    defaultValue: "Files",
-  },
-};
+export const PillVariant: Story = {};
 
 export const UnderlineVariant: Story = {
   args: { variant: "underline" },
