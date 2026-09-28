@@ -20,6 +20,7 @@ export function Tab({ selected, label, variant, badge, ...rest }: TabProps) {
       role="tab"
       aria-selected={selected}
     >
+      {/* The space separates label and badge in the accessible name ("Emails New") */}
       {label} {badge && <Badge variant={badge.variant}>{badge.label}</Badge>}
     </button>
   );

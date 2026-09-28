@@ -2,6 +2,7 @@
 
 .tabList {
   display: flex;
+  // Room for the focus ring, which overflow-x would otherwise clip
   padding: var(--spacing-3xs);
   overflow-x: auto;
 

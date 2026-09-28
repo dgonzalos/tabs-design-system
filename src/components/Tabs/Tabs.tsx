@@ -43,7 +43,7 @@ export function Tabs({
     return null;
   }
 
-  const onTabClick = (value: string) => {
+  const selectTab = (value: string) => {
     if (value === selectedValue) {
       return;
     }
@@ -65,7 +65,7 @@ export function Tabs({
     }
 
     tabRefs.current[nextIndex]?.focus();
-    onTabClick(items[nextIndex].value);
+    selectTab(items[nextIndex].value);
     // Prevent the default action to avoid scrolling the page when navigating tabs with arrow keys
     event.preventDefault();
   };
@@ -85,7 +85,7 @@ export function Tabs({
             aria-controls={getPanelId(baseId, index)}
             key={item.value}
             label={item.label}
-            onClick={() => onTabClick(item.value)}
+            onClick={() => selectTab(item.value)}
             onKeyDown={(event) => onTabKeyDown(event, index)}
             variant={variant}
             badge={item.badge}
