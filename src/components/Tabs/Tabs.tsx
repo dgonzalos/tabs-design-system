@@ -14,9 +14,13 @@ export type TabItem = {
 };
 
 export interface TabsProps extends React.ComponentPropsWithRef<"div"> {
+  /** Value of the tab selected on first render. Defaults to the first item. */
   defaultValue?: string;
+  /** Called with the new value when the selected tab changes. */
   onValueChange?: (value: string) => void;
+  /** One entry per tab and panel. */
   items: TabItem[];
+  /** Visual variant from the design. */
   variant?: TabsVariant;
 }
 

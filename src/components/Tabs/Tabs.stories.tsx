@@ -5,6 +5,7 @@ import { Tabs } from "./Tabs";
 const meta = {
   title: "Components/Tabs",
   component: Tabs,
+  tags: ["autodocs"],
   args: {
     defaultValue: "Files",
     items: [
