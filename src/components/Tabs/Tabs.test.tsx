@@ -115,6 +115,12 @@ describe("Tabs", () => {
     expect(panel3).not.toBeVisible();
   });
 
+  it("selects the first tab when defaultValue matches no tab", async () => {
+    renderTabs({ defaultValue: "typo" });
+    await userEvent.tab();
+    expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
+  });
+
   it("selects the tab given by defaultValue", () => {
     renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
@@ -207,6 +213,11 @@ describe("Tabs", () => {
     const { container } = renderTabs({ defaultValue });
     const results = await axe.run(container, { rules: { "color-contrast": { enabled: false } } });
     expect(results.violations).toEqual([]);
+  });
+
+  it("names each panel after its tab when the value has spaces", () => {
+    renderTabs({ items: [{ value: "my files", content: "Files", label: "Files" }] });
+    expect(screen.getByRole("tabpanel", { name: "Files" })).toBeInTheDocument();
   });
 
   it("uses the pill variant by default", () => {

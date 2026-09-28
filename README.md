@@ -63,7 +63,7 @@ Any other `div` prop (`className`, `id`, `data-*`) goes to the root element.
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `value` | `string` | Identifies the tab. It is also part of the ARIA ids, so it must be unique and have no spaces. |
+| `value` | `string` | Identifies the tab. It must be unique. |
 | `label` | `string` | Text of the tab. |
 | `content` | `ReactNode` | Content of its panel. |
 | `badge` | `{ label: string; variant?: "neutral" \| "positive" \| "negative" }` | Optional badge shown after the label. |
@@ -125,7 +125,6 @@ I left two things untouched because they are outside the scope of the task: `@st
 ## Known limitations
 
 - On narrow screens, a tab focused with the arrow keys can stay partly out of view, because `focus()` only scrolls elements that are completely hidden.
-- If `defaultValue` doesn't match any `value`, no tab is selected.
 
 ## Next steps
 

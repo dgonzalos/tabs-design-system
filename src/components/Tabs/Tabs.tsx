@@ -20,8 +20,8 @@ export interface TabsProps extends React.ComponentPropsWithRef<"div"> {
   variant?: TabsVariant;
 }
 
-const getTabId = (baseId: string, value: string) => `${baseId}-tab-${value}`;
-const getPanelId = (baseId: string, value: string) => `${baseId}-panel-${value}`;
+const getTabId = (baseId: string, index: number) => `${baseId}-tab-${index}`;
+const getPanelId = (baseId: string, index: number) => `${baseId}-panel-${index}`;
 
 export function Tabs({
   defaultValue,
@@ -33,7 +33,10 @@ export function Tabs({
   ...rest
 }: TabsProps) {
   const baseId = useId();
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue ?? items[0]?.value ?? "");
+  // Fall back to the first tab if defaultValue matches no item
+  const [selectedValue, setSelectedValue] = useState(() =>
+    items.some((item) => item.value === defaultValue) ? defaultValue : items[0]?.value,
+  );
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   if (items.length === 0) {
@@ -78,8 +81,8 @@ export function Tabs({
         {items.map((item, index) => (
           <Tab
             selected={item.value === selectedValue}
-            id={getTabId(baseId, item.value)}
-            aria-controls={getPanelId(baseId, item.value)}
+            id={getTabId(baseId, index)}
+            aria-controls={getPanelId(baseId, index)}
             key={item.value}
             label={item.label}
             onClick={() => onTabClick(item.value)}
@@ -93,12 +96,12 @@ export function Tabs({
           />
         ))}
       </div>
-      {items.map((item) => (
+      {items.map((item, index) => (
         <div
           key={item.value}
           role="tabpanel"
-          id={getPanelId(baseId, item.value)}
-          aria-labelledby={getTabId(baseId, item.value)}
+          id={getPanelId(baseId, index)}
+          aria-labelledby={getTabId(baseId, index)}
           hidden={item.value !== selectedValue}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: the ARIA tabs pattern puts the panel in the tab order
           tabIndex={0}
