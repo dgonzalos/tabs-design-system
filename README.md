@@ -88,11 +88,12 @@ Any other `div` prop (`className`, `id`, `data-*`) goes to the root element.
 ## Design decisions
 
 - **Data API (`items`) instead of compound components.** Tabs renders the whole ARIA structure itself, so it can't be put together wrong, and keyboard navigation is simple index arithmetic. The trade-off is less flexibility to customise a single tab.
-- **Tabs are identified by `value`, not by index.** The state stays meaningful (`"files"` rather than `2`) and doesn't change when items are reordered or filtered.
+- **Tabs are identified by `value`, not by index.** The state stays meaningful (`"files"` rather than `2`) and doesn't change when items are reordered or filtered. ARIA ids use the index, since they're internal and must be valid ids
 - **Uncontrolled only.** `defaultValue` and `onValueChange` cover the brief. Controlled mode is in the next steps.
 - **All panels stay mounted and hidden with `hidden`.** Switching is instant and each panel keeps its state, like a half-filled form. The cost is mounting every panel up front.
 - **Mobile is a media query, not a prop.** Figma models it as a variant, but defines it as a viewport of 768px or less, which is what a media query expresses.
 - **Overflowing tabs scroll horizontally.** Wrapping them onto a second line would look like two separate groups, especially with the Underline variant.
+- **Two layers of tokens.** Semantic tokens use the names of the Figma colour variables, and primitives hold the raw values. Components only use semantic colour tokens, so a dark theme would only need to redefine those.
 - **SCSS with CSS Modules and `data-variant`.** Scoped styles with no runtime cost, one clear selector per variant, and a stable hook for tests. Biome doesn't support SCSS yet, so those files are formatted in the editor.
 - **The app loads the font, not the components.** Inter is loaded with `@fontsource/inter` at the entry points, and components only use `--font-family-sans`.
 
