@@ -284,11 +284,6 @@ describe("Tabs", () => {
     expect(screen.getByRole("tablist", { name: "Inbox" })).toBeInTheDocument();
   });
 
-  it("renders only the label when the tab has no badge", () => {
-    renderTabs();
-    expect(screen.getByRole("tab", { name: "Tab 1" })).toBeInTheDocument();
-  });
-
   it("gives tabindex 0 only to the selected tab", () => {
     renderTabs({ defaultValue: "tab2" });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });
@@ -304,11 +299,24 @@ describe("Tabs", () => {
 
     firstTab.focus();
     await userEvent.keyboard("{ArrowRight}");
+    expect(secondTab).toHaveFocus();
     expect(firstTab).toHaveAttribute("tabindex", "-1");
     expect(secondTab).toHaveAttribute("tabindex", "0");
 
     await userEvent.keyboard("{ArrowLeft}");
+    expect(firstTab).toHaveFocus();
     expect(firstTab).toHaveAttribute("tabindex", "0");
     expect(secondTab).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("wraps around when pressing the arrow keys at either end", async () => {
+    renderTabs({ defaultValue: "tab1" });
+    screen.getByRole("tab", { name: "Tab 1" }).focus();
+
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(screen.getByRole("tab", { name: "Tab 3" })).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowRight}");
+    expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
   });
 });
