@@ -121,6 +121,16 @@ describe("Tabs", () => {
     expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
   });
 
+  it("selects the first tab when the selected item is removed", () => {
+    const { rerender } = renderTabs({ defaultValue: "tab3" });
+    rerender(<Tabs aria-label="Inbox" items={tabList.slice(0, 2)} defaultValue="tab3" />);
+
+    const firstTab = screen.getByRole("tab", { name: "Tab 1" });
+    expect(firstTab).toHaveAttribute("aria-selected", "true");
+    expect(firstTab).toHaveAttribute("tabindex", "0");
+    expect(getPanelFor(firstTab)).toBeVisible();
+  });
+
   it("selects the tab given by defaultValue", () => {
     renderTabs({ defaultValue });
     const firstTab = screen.getByRole("tab", { name: "Tab 1" });

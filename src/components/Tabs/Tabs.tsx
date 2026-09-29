@@ -37,10 +37,13 @@ export function Tabs({
   ...rest
 }: TabsProps) {
   const baseId = useId();
-  // Fall back to the first tab if defaultValue matches no item
-  const [selectedValue, setSelectedValue] = useState(() =>
-    items.some((item) => item.value === defaultValue) ? defaultValue : items[0]?.value,
-  );
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
+
+  // Fall back to the first tab if the value matches no item (typo or removed item).
+  const activeValue = items.some((item) => item.value === selectedValue)
+    ? selectedValue
+    : items[0]?.value;
+
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   if (items.length === 0) {
@@ -48,7 +51,7 @@ export function Tabs({
   }
 
   const selectTab = (value: string) => {
-    if (value === selectedValue) {
+    if (value === activeValue) {
       return;
     }
     setSelectedValue(value);
@@ -84,7 +87,7 @@ export function Tabs({
       >
         {items.map((item, index) => (
           <Tab
-            selected={item.value === selectedValue}
+            selected={item.value === activeValue}
             id={getTabId(baseId, index)}
             aria-controls={getPanelId(baseId, index)}
             key={item.value}
@@ -96,7 +99,7 @@ export function Tabs({
             ref={(el) => {
               tabRefs.current[index] = el;
             }}
-            tabIndex={item.value === selectedValue ? 0 : -1}
+            tabIndex={item.value === activeValue ? 0 : -1}
           />
         ))}
       </div>
@@ -106,7 +109,7 @@ export function Tabs({
           role="tabpanel"
           id={getPanelId(baseId, index)}
           aria-labelledby={getTabId(baseId, index)}
-          hidden={item.value !== selectedValue}
+          hidden={item.value !== activeValue}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: the ARIA tabs pattern puts the panel in the tab order
           tabIndex={0}
         >
